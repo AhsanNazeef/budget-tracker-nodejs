@@ -1,5 +1,23 @@
 import { StatusCodes } from "http-status-codes";
 import { ApiResponse, ResponseStatus, HttpException } from "../interfaces";
+import {
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+  Router,
+} from "express";
+
+/**
+ * A wrapper for async route handlers that catches any errors thrown during request processing.
+ * @param fn - The route handler function.
+ * @returns A function that can be used as a route handler.
+ *
+ */
+export const asyncErrorHandler =
+  (fn: RequestHandler) => (req: Request, res: Response, next: NextFunction) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
 
 /**
  * Builds a response indicating a successful operation.
@@ -84,3 +102,46 @@ export class BadRequestException extends HttpException {
     super(StatusCodes.BAD_REQUEST, message, errors);
   }
 }
+
+/*
+ * Creates a new instance of an Express Router with support for async route handlers.
+ */
+export const createRouter = () => {
+  const router = Router();
+
+  type RouterMethod = "get" | "post" | "put" | "delete" | "patch";
+
+  const originalMethods = {
+    get: router.get.bind(router),
+    post: router.post.bind(router),
+    put: router.put.bind(router),
+    delete: router.delete.bind(router),
+    patch: router.patch.bind(router),
+  } as const;
+
+  const wrapMethod = (method: RouterMethod) => {
+    return function (
+      path: string | RegExp,
+      ...handlers: RequestHandler[]
+    ): ReturnType<(typeof router)[RouterMethod]> {
+      const wrappedHandlers: RequestHandler[] = handlers.map((handler) => {
+        if (typeof handler === "function") {
+          return asyncErrorHandler(handler);
+        }
+        return handler;
+      });
+
+      // Use apply instead of call with spread
+      return (originalMethods[method] as (...args: any[]) => any).apply(
+        router,
+        [path, ...wrappedHandlers]
+      );
+    };
+  };
+
+  (Object.keys(originalMethods) as RouterMethod[]).forEach((method) => {
+    (router as any)[method] = wrapMethod(method);
+  });
+
+  return router;
+};

@@ -4,6 +4,8 @@ import cors from "cors";
 import morgan from "morgan";
 import { Router, Request, Response, NextFunction } from "express";
 
+import { authenticate } from "../middlewares/auth.middleware";
+
 const middleware = Router();
 
 // Logging HTTP requests
@@ -32,5 +34,8 @@ middleware.use(compression());
 // Body parsing middleware for JSON and URL-encoded data
 middleware.use(bodyParser.json());
 middleware.use(bodyParser.urlencoded({ extended: true }));
+
+// //authentication middleware
+middleware.use(authenticate);
 
 export default middleware;

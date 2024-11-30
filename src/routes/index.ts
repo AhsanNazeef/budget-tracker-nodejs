@@ -1,6 +1,6 @@
 import * as homeController from "../controllers";
 import authRouter from "./auth.routes";
-import { createRouter } from "common/helpers";
+import { createRouter } from "../common/helpers";
 
 const router = createRouter();
 
