@@ -5,8 +5,10 @@ import * as homeServices from "../services";
 import { CustomApiRequest } from "../common/interfaces";
 import { createSuccessResponse } from "../common/helpers";
 
-export const helloFromServer = async (req: CustomApiRequest, res: Response) => {
+export const helloFromServer = async (
+  req: CustomApiRequest<void>,
+  res: Response
+): Promise<void> => {
   const data = homeServices.helloFromServer();
-  res.statusCode = StatusCodes.OK;
-  res.send(createSuccessResponse(data));
+  res.status(StatusCodes.OK).send(createSuccessResponse(data));
 };

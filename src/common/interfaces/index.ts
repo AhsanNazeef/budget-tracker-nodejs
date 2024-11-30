@@ -1,6 +1,7 @@
 import { Request } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
 import { StatusCodes } from "http-status-codes";
+import { Document } from "mongoose";
 
 /**
  * Custom request interface that includes the request body and query parameters,
@@ -10,6 +11,7 @@ export interface CustomApiRequest<TBody = {}, TQuery = { [key: string]: any }>
   extends Request<ParamsDictionary, any, TBody, TQuery> {
   body: TBody;
   query: TQuery;
+  user?: IUser;
 }
 
 /**
@@ -50,4 +52,33 @@ export class HttpException extends Error {
  */
 export interface ValidationErrorDetails {
   [key: string]: string[];
+}
+
+export type TRole = "user" | "admin";
+
+export interface IUser extends Document {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  role: string;
+  refreshToken: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ICreateUserRequestBody {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
+export interface ILoginRequestBody {
+  email: string;
+  password: string;
+}
+
+export interface IRefreshTokenRequestBody {
+  token: string;
 }
