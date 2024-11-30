@@ -1,30 +1,24 @@
-import express, { Request, Response, NextFunction, Application } from "express";
-
+import express, { Application } from "express";
 import middlewares from "./middlewares";
 import dbConection from "./db";
 import router from "../routes";
+import { errorHandler } from "../middlewares/error.middleware";
 
-// Create Express server
 const app: Application = express();
+
+// Body parser middleware should be first
 app.use(express.json());
 
 // Connect to database
 dbConection();
 
-// Include middlewares
+// Include other middlewares
 app.use(middlewares);
 
-//ALL THE API ROUTES
+// API routes
 app.use("/", router);
 
-// CORS
-app.use(function (req: Request, res: Response, next: NextFunction) {
-  res.header({
-    "Access-Control-Allow-Origin": "*",
-    "access-control-allow-headers": "*",
-    "Access-Control-Allow-Methods": "*",
-  });
-  next();
-});
+// Error handling middleware must be last
+app.use(errorHandler);
 
 export default app;

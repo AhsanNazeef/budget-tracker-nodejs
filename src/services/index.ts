@@ -1,3 +1,5 @@
 export const helloFromServer = () => {
-  return "Hello from server";
+  return {
+    message: "Hello from server",
+  };
 };
