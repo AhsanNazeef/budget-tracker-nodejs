@@ -4,6 +4,7 @@ import User from "../models/user.model";
 import { CustomApiRequest } from "../common/interfaces";
 import { HttpException } from "../common/interfaces";
 import { StatusCodes } from "http-status-codes";
+import { asyncErrorHandler } from "../common/helpers";
 
 export const authenticate = async (
   req: CustomApiRequest,
@@ -31,3 +32,14 @@ export const authenticate = async (
     next(new HttpException(StatusCodes.UNAUTHORIZED, "Invalid token"));
   }
 };
+export const requireAuth = asyncErrorHandler(
+  async (req: CustomApiRequest, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      throw new HttpException(
+        StatusCodes.UNAUTHORIZED,
+        "Authentication required"
+      );
+    }
+    next();
+  }
+);
