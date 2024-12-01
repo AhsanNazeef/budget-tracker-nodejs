@@ -1,5 +1,5 @@
 import express, { Application } from "express";
-import middlewares from "./middlewares";
+import middlewares from "../middlewares";
 import dbConection from "./db";
 import router from "../routes";
 import { errorHandler } from "../middlewares/error.middleware";
