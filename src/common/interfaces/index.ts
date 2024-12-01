@@ -57,6 +57,7 @@ export interface ValidationErrorDetails {
 export type TRole = "user" | "admin";
 
 export interface IUser extends Document {
+  _id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -81,4 +82,36 @@ export interface ILoginRequestBody {
 
 export interface IRefreshTokenRequestBody {
   token: string;
+}
+export interface IExpense extends Document {
+  title: string;
+  price: number;
+  date: Date;
+  user: IUser["_id"];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ICreateExpenseRequestBody {
+  title: string;
+  price: number;
+  date: string;
+}
+
+export interface IExpenseQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  startDate?: string;
+  endDate?: string;
+  sortBy?: "price" | "date";
+  sortOrder?: "asc" | "desc";
+}
+
+export interface PaginationInfo {
+  total: number;
+  totalPages: number;
+  currentPage: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
 }
