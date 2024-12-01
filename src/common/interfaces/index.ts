@@ -62,6 +62,14 @@ export interface IUser extends Document {
   lastName: string;
   email: string;
   password: string;
+  phoneNumber?: string;
+  fatherName?: string;
+  gender?: "male" | "female" | "other";
+  zipCode?: string;
+  address?: string;
+  dateOfBirth?: Date;
+  photo?: string;
+  aboutMe?: string;
   role: string;
   refreshToken: string;
   createdAt: Date;
@@ -114,4 +122,15 @@ export interface PaginationInfo {
   currentPage: number;
   hasNextPage: boolean;
   hasPreviousPage: boolean;
+}
+
+export interface IUpdateProfileBody {
+  phoneNumber?: string;
+  fatherName?: string;
+  gender?: "male" | "female" | "other";
+  zipCode?: string;
+  address?: string;
+  dateOfBirth?: string;
+  photo?: string;
+  aboutMe?: string;
 }

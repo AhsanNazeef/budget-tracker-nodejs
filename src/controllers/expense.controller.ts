@@ -15,6 +15,7 @@ import {
 import {
   expenseSchema,
   expenseQuerySchema,
+  expensePatchSchema,
 } from "../common/validators/expense.validator";
 
 export const createExpense = async (
@@ -95,7 +96,9 @@ export const patchExpense = async (
   req: CustomApiRequest<Partial<ICreateExpenseRequestBody>>,
   res: Response
 ) => {
-  const { error } = expenseSchema.validate(req.body, { allowUnknown: true });
+  const { error } = expensePatchSchema.validate(req.body, {
+    allowUnknown: true,
+  });
   if (error) {
     throw new HttpException(StatusCodes.BAD_REQUEST, error.details[0].message);
   }
