@@ -232,7 +232,7 @@ ISC
 
 ## 👤 Author
 
-Ahsan Nazeef
+[Ahsan Nazeef](https://github.com/AhsanNazeef/)
 
 ---
 
