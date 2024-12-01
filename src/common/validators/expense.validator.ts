@@ -12,6 +12,14 @@ export const expenseSchema = Joi.object({
   date: Joi.date().format("DD/MM/YYYY").required(),
 });
 
+export const expensePatchSchema = Joi.object({
+  title: Joi.string()
+    .max(30)
+    .pattern(/^[a-zA-Z\s-]+$/),
+  price: Joi.number().positive(),
+  date: Joi.date().format("DD/MM/YYYY"),
+}).min(1);
+
 export const expenseQuerySchema = Joi.object({
   page: Joi.number().min(1),
   limit: Joi.number().min(1).max(100),
