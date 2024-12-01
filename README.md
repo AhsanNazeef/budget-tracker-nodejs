@@ -207,8 +207,7 @@ src/
 │   └── validators/  # Joi validation schemas
 ├── config/
 │   ├── app.ts      # Express configuration
-│   ├── db.ts       # Database configuration
-│   └── middlewares.ts
+│   └── db.ts       # Database configuration
 ├── controllers/     # Request handlers
 ├── middlewares/     # Custom middlewares
 ├── models/         # Mongoose models
