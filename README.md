@@ -184,13 +184,6 @@ DELETE /expenses/:id
 }
 ```
 
-## Error Handling
-
-- 400: Bad Request - Invalid input
-- 401: Unauthorized - Invalid/missing token
-- 404: Not Found - Resource not found
-- 500: Internal Server Error
-
 ## 🚀 Development
 
 ```bash
@@ -244,28 +237,3 @@ Ahsan Nazeef
 ---
 
 Made with ❤️ using Node.js and TypeScript
-
-```
-
-This README provides:
-1. Project overview and features
-2. Installation instructions
-3. Detailed API documentation
-4. Environment setup
-5. Project structure
-6. Response formats
-7. Error handling
-8. Development commands
-
-Feel free to customize it further based on your specific needs!This README provides:
-1. Project overview and features
-2. Installation instructions
-3. Detailed API documentation
-4. Environment setup
-5. Project structure
-6. Response formats
-7. Error handling
-8. Development commands
-
-Feel free to customize it further based on your specific needs!
-```
