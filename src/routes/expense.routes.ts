@@ -7,6 +7,7 @@ const expenseRouter = createRouter();
 // All expense routes require authentication
 expenseRouter.use(requireAuth);
 
+expenseRouter.get("/budget-status", expenseController.getBudgetStatus);
 expenseRouter.get("/:id", expenseController.getExpenseById);
 expenseRouter.get("/", expenseController.getExpenses);
 expenseRouter.post("/", expenseController.createExpense);

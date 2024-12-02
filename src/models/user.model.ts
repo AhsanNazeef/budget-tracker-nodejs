@@ -20,6 +20,11 @@ const UserSchema: Schema = new Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    budgetLimit: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
     refreshToken: { type: String, default: "" },
   },
   { timestamps: true }

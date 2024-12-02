@@ -116,3 +116,8 @@ export const patchExpense = async (
   );
   res.status(StatusCodes.OK).send(createSuccessResponse(expense));
 };
+
+export const getBudgetStatus = async (req: CustomApiRequest, res: Response) => {
+  const budgetStatus = await expenseService.getBudgetStatus(req.user!._id);
+  res.status(StatusCodes.OK).send(createSuccessResponse(budgetStatus));
+};

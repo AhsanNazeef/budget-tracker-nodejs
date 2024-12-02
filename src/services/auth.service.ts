@@ -13,7 +13,8 @@ export const registerUser = async (
   firstName: string,
   lastName: string,
   email: string,
-  password: string
+  password: string,
+  budgetLimit: number
 ): Promise<IUser> => {
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -26,6 +27,7 @@ export const registerUser = async (
     lastName,
     email,
     password: hashedPassword,
+    budgetLimit,
   });
   return user.save();
 };

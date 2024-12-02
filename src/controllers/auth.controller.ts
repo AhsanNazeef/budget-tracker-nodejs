@@ -27,13 +27,15 @@ export const register = async (
     "lastName",
     "email",
     "password",
+    "budgetLimit",
   ]);
-  const { firstName, lastName, email, password } = req.body;
+  const { firstName, lastName, email, password, budgetLimit } = req.body;
   const user = await authService.registerUser(
     firstName,
     lastName,
     email,
-    password
+    password,
+    budgetLimit
   );
   res.status(StatusCodes.CREATED).send(createSuccessResponse(user));
 };

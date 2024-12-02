@@ -11,4 +11,9 @@ export const registerSchema = Joi.object({
     .required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(8).required(),
+  budgetLimit: Joi.number().positive().required().messages({
+    "number.base": "Budget limit must be a number",
+    "number.positive": "Budget limit must be positive",
+    "any.required": "Budget limit is required",
+  }),
 });

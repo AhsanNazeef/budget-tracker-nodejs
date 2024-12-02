@@ -71,6 +71,7 @@ export interface IUser extends Document {
   photo?: string;
   aboutMe?: string;
   role: string;
+  budgetLimit: number;
   refreshToken: string;
   createdAt: Date;
   updatedAt: Date;
@@ -81,6 +82,7 @@ export interface ICreateUserRequestBody {
   lastName: string;
   email: string;
   password: string;
+  budgetLimit: number;
 }
 
 export interface ILoginRequestBody {
@@ -133,4 +135,12 @@ export interface IUpdateProfileBody {
   dateOfBirth?: string;
   photo?: string;
   aboutMe?: string;
+}
+
+export interface IBudgetStatus {
+  budgetLimit: number;
+  currentMonthSpent: number;
+  remaining: number;
+  isOverBudget: boolean;
+  totalExpenses: number;
 }

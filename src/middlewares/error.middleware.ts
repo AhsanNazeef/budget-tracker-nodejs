@@ -13,6 +13,8 @@ export const errorHandler = (
     return res.status(err.statusCode).send(createErrorResponse(err));
   }
 
+  console.log(err);
+
   // Handle unknown errors
   return res
     .status(StatusCodes.INTERNAL_SERVER_ERROR)

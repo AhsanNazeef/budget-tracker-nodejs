@@ -1,6 +1,11 @@
 import { StatusCodes } from "http-status-codes";
-import { HttpException, PaginationInfo } from "../common/interfaces";
+import {
+  HttpException,
+  IBudgetStatus,
+  PaginationInfo,
+} from "../common/interfaces";
 import Expense from "../models/expense.model";
+import User from "../models/user.model";
 import { IExpense, IExpenseQueryParams } from "../common/interfaces";
 import mongoose from "mongoose";
 
@@ -15,6 +20,38 @@ export const createExpense = async (
   price: number,
   date: Date
 ): Promise<IExpense> => {
+  const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+  const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new HttpException(StatusCodes.NOT_FOUND, "User not found");
+  }
+
+  const monthlyExpenses = await Expense.aggregate([
+    {
+      $match: {
+        user: new mongoose.Types.ObjectId(userId),
+        date: { $gte: startOfMonth, $lte: endOfMonth },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        total: { $sum: "$price" },
+      },
+    },
+  ]);
+
+  const currentMonthTotal = monthlyExpenses[0]?.total || 0;
+
+  if (currentMonthTotal + price > user.budgetLimit) {
+    throw new HttpException(
+      StatusCodes.BAD_REQUEST,
+      `This expense would exceed your monthly budget limit of ${user.budgetLimit}`
+    );
+  }
+
   const expense = new Expense({
     title,
     price,
@@ -156,4 +193,60 @@ export const patchExpense = async (
   }
 
   return expense;
+};
+
+export const getBudgetStatus = async (
+  userId: string
+): Promise<IBudgetStatus> => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new HttpException(StatusCodes.NOT_FOUND, "User not found");
+  }
+
+  const now = new Date();
+  const startOfMonth = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1));
+  const endOfMonth = new Date(
+    Date.UTC(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999)
+  );
+
+  const monthlyExpenses = await Expense.aggregate([
+    {
+      $match: {
+        user: new mongoose.Types.ObjectId(userId),
+        date: {
+          $gte: startOfMonth,
+          $lte: endOfMonth,
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        total: {
+          $sum: {
+            $toDouble: "$price",
+          },
+        },
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        total: { $round: ["$total", 2] },
+        count: 1,
+      },
+    },
+  ]);
+
+  const currentMonthSpent = monthlyExpenses[0]?.total || 0;
+  const remaining = Number((user.budgetLimit - currentMonthSpent).toFixed(2));
+
+  return {
+    budgetLimit: user.budgetLimit,
+    currentMonthSpent,
+    remaining,
+    isOverBudget: currentMonthSpent > user.budgetLimit,
+    totalExpenses: monthlyExpenses[0]?.count || 0,
+  };
 };

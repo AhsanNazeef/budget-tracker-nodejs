@@ -124,6 +124,10 @@ GET /expenses/:id
 - Get single expense
 - Header: Authorization: Bearer <token>
 
+GET /expenses/budget-status
+- Get current month's budget status
+- Header: Authorization: Bearer <token>
+
 POST /expenses
 - Create new expense
 - Header: Authorization: Bearer <token>
